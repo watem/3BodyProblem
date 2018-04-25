@@ -82,15 +82,56 @@ public static double[][] euler(double obj[][], double p1, double p2, double m1, 
   return obj;
 }
 
-      // call accel();
+// calculate accel();
 
-//TODO: accel method
-public static double accel(double p0, double p1, double p2, double m1, double m2) {
-  double a1, a2, at;
-  a1 = -G*m1/(Math.abs(p0-p1)*(p1-p0));
-  a2 = -G*m2/(Math.abs(p0-p2)*(p2-p0));
-  at = a1+a2;
-  return at;
+public static double [] getR(double [] objPos1, double [] objPos2) {
+	 
+	double [] rVector = new double [2];
+	
+	rVector[0]= objPos2[0] - objPos1[0];
+	rVector[1]= objPos2[1] - objPos1[1];
+	
+	return rVector;
+	}
+
+
+public static double getMag(double [] rVector) {
+	
+	double rMagnitude;
+	rMagnitude = Math.sqrt(Math.pow(rVector[0],2) + Math.pow(rVector[1], 2));
+	return rMagnitude;
+}
+
+
+public static double [] getUnit(double [] rVector, double rMagnitude ) {
+	
+	double [] unit = new double[2];
+	
+	unit[0] = rVector[0]/rMagnitude;
+	unit[1] = rVector[1]/rMagnitude;
+	
+return unit;
+}
+
+public static double [] accelSunAnyObj( double mPullObj,double [] objPos1, double [] objPos2) {
+
+double rMagnitude;	
+double [] rVector = new double [2];
+double [] unit = new double [2];
+double [] accelVector = new double [2];
+double accelMagnitude;
+
+rVector = getR(objPos1,objPos2);
+rMagnitude = getMag(rVector);
+unit = getUnit(rVector,rMagnitude);
+
+accelMagnitude= (G*mPullObj)/ Math.pow(rMagnitude, 2);
+accelVector[0] = accelMagnitude * unit[0];
+accelVector[1] = accelMagnitude * unit[1];
+  
+  return accelVector;
+}
+
 }
 
 
