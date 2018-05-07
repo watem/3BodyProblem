@@ -3,7 +3,11 @@
 
 // TODO: javadocs
 
+
   public class ThreeBody {
+  
+  //Final variables declaration
+  
   public static final double G = 8.64960768*Math.pow(10, -13);//gravitational constant (km^3/kg/h^2)
   public static final double dt = 0.1; //delta t in hours
   public static double tmax ; //number of hours to run
@@ -52,7 +56,7 @@
 
   
   
-//TODO: variable declaration, arrays
+
 	
 	
   double [][][] object = new double [3][3][2];
