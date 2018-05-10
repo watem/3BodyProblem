@@ -55,8 +55,21 @@ public class SolarBody{
   public static SolarBody Sun = new SolarBody(nameSun, massSun, solDisSun, vSun, radSun, 0); //sun constructor
   public static SolarBody Jupiter = new SolarBody(nameJupiter, massJupiter, solDisJupiter, vJupiter, radJupiter, 0); //
   public static SolarBody Earth = new SolarBody(nameEarth, massEarth, solDisEarth, vEarth, radEarth, 0);
-  public static SolarBody ES_L4 = new SolarBody("ES_L4", -1, solDisEarth, vEarth, radEarth, Math.PI/3);
+  public static SolarBody ES_L4 = new SolarBody("ES_L4", -1, solDisEarth, vEarth, 0, Math.PI/3);
   public static SolarBody PlanetX = new SolarBody("PlanetX", massEarth, solDisEarth, vEarth, radEarth, Math.PI);
+  public static SolarBody Greeks = new SolarBody("Greeks", -1, solDisJupiter, vJupiter, 0, Math.PI/3);
+  public static SolarBody Trojans = new SolarBody("Trojans", -1, solDisJupiter, vJupiter, 0, -Math.PI/3);
+  public static SolarBody Satellite = new SolarBody("satellite", 100, -1, -1, 0)
+
+
+
+  public static SolarBody chooseTheta(String name, double mass, double solDis, double vInitial, double rad){
+    Scanner kb = new Scanner(System.in);
+    System.out.println("desired theta for "+name);
+    double theta = kb.nextDouble();
+    SolarBody thetaless = new SolarBody(name, mass, solDis, vInitial, rad, theta);
+    return thetaless;
+  }
 
   public static SolarBody named(String name){
     SolarBody named = new SolarBody(name);
@@ -66,4 +79,5 @@ public class SolarBody{
   SolarBody other = new SolarBody(name, mass, solDis, vInitial, rad, theta);
   return other;
   }//other constructor
+
 }
