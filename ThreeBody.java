@@ -14,74 +14,120 @@ public class ThreeBody{
   public static final int imax =(int) (tmax/dt);                //number of time steps
   // public static double imax;                                    //number of time steps {inputs}
 
-  public static final double au = 1.49597870700*Math.pow(10,8); //initial distance in km
-  public static final double velocityEarth = 1.0725*Math.pow(10, 5); //km/h
-  public static final double massEarth=5.972*Math.pow(10, 24);  //kg
-  public static final double massSun=1.989*Math.pow(10, 30);    //kg
-  public static final double massBody=10;    //kg
+  public static final int bodies = 3;
 
-
-
-
-  public static Scanner kb = new Scanner(System.in);
+  public static SolarBody body0 = SolarBody.Sun;
+  public static SolarBody body1 = SolarBody.Earth;
+  public static SolarBody body2 = SolarBody.PlanetX;
+  // public static SolarBody body2 = SolarBody.named("satellite");
+  public static SolarBody body3 = SolarBody.named("probe");
 
   // toggle graphing
   public static final boolean graphing = true;
   public static final boolean print = false;
-  public static final boolean inputMass = false;
-  public static final boolean inputSat =true;
-
 
   public static void main(String[] args) {
     Scanner kb = new Scanner(System.in);
-    int bodies = 3;
     double[] mass = new double[bodies];
     double[][][][] body= new double[bodies][3][2][imax];//[body][pos][x/y][timestep]
-    String[] bodyName=new String[bodies];
+    String bodyName[] = new String[bodies];
+    double vInit[] = new double[bodies];
+    double radius[] = new double[bodies];
+    double theta[] = new double[bodies];
+    double distance;
 
-    // for (int i=0;i<bodyName.length;i++) {
-    //   bodyName[i]="body"+i;
-    // }
-    bodyName[0]="Earth";
-    bodyName[1]="Sun";
-    if (bodies>2) {
-      bodyName[2]="Satellite";
+
+    // names
+    bodyName[0]=body0.name;
+    bodyName[1]=body1.name;
+    if (bodyName.length>2) {
+      bodyName[2]=body2.name;
+    }
+    if (bodyName.length>3) {
+      bodyName[3]=body3.name;
+    }
+    for (int i = 4;i<bodyName.length;i++) {
+      bodyName[i]="body "+(i+1);
     }
 
-    mass[0]=massEarth;
-    mass[1]=massSun;
-
-    if (bodies>2) {
-      if (inputMass) {
-        for (int i=3;i<mass.length;i++) {
-          System.out.println("Mass #"+(i+1)+":");
-          mass[i] = kb.nextDouble();
-        }
+    // masses
+    mass[0]=body0.mass;
+    mass[1]=body1.mass;
+    if (mass.length>2) {
+      mass[2]=body2.mass;
+    }
+    if (mass.length>3) {
+      mass[3]=body3.mass;
+    }
+    for (int i=4;i<mass.length;i++) {
+      mass[i] = -1;
+    }
+    for (int i=0;i<mass.length;i++) {
+      if (mass[i]<0) {
+        System.out.print("\nMass #"+i+":");
+        mass[i] = kb.nextDouble();
       }
-      else mass[2]=massBody;
     }
-    // System.out.println("velocity");
-    // double velocityEarth = kb.nextDouble();
 
-
-    body[0][0][0][0]=au;
-    body[0][1][1][0]=velocityEarth;
-
-    if (bodies>2) {
-      // System.out.println("x postion");
-      // body[2][0][0][0]=kb.nextDouble();
-      body[2][0][0][0]=au*1/10;
-      // System.out.println("y postion");
-      // body[2][0][1][0]=kb.nextDouble();
-      // body[2][0][1][0]=-Math.sqrt(3)*au/2;
-      body[2][0][1][0]=-au*1/10;
-      // System.out.println("x velocity");
-      // body[2][1][0][0]=kb.nextDouble();
-      body[2][1][0][0]=velocityEarth*1/10;
-      // System.out.println("y velocity");
-      // body[2][1][1][0]=kb.nextDouble();
-      body[2][1][1][0]=velocityEarth*1/10;
+    // thetas
+    theta[0]=body0.theta;
+    theta[1]=body1.theta;
+    if (theta.length>2) {
+      theta[2]=body2.theta;
     }
+    if (theta.length>3) {
+      theta[3]=body3.theta;
+    }
+    for (int i=4;i<theta.length;i++) {
+      System.out.print("\nTheta #"+i+":");
+      theta[i] = kb.nextDouble();
+    }
+
+    // initial position
+    body[0][0][0][0]=body0.solDis*Math.cos(theta[0]);
+    body[0][0][1][0]=body0.solDis*Math.sin(theta[0]);
+
+    body[1][0][0][0]=body1.solDis*Math.cos(theta[1]);
+    body[1][0][1][0]=body1.solDis*Math.sin(theta[1]);
+    if (body.length>2){
+    body[2][0][0][0]=body2.solDis*Math.cos(theta[2]);
+    body[2][0][1][0]=body2.solDis*Math.sin(theta[2]);
+    }
+    if (body.length>3){
+    body[3][0][0][0]=body3.solDis*Math.cos(theta[3]);
+    body[3][0][1][0]=body3.solDis*Math.sin(theta[3]);
+    }
+    for (int i = 4;i<body.length;i++) {
+      System.out.println("distance from centre");
+      distance = kb.nextDouble();
+      body[i][0][0][0]=distance*Math.cos(theta[i]);
+      body[i][0][1][0]=distance*Math.sin(theta[i]);
+    }
+
+    body[0][1][0][0]=body0.vInitial*Math.sin(theta[0]);
+    body[0][1][1][0]=body0.vInitial*Math.cos(theta[0]);
+
+    body[1][1][0][0]=body1.vInitial*Math.sin(theta[1]);
+    body[1][1][1][0]=body1.vInitial*Math.cos(theta[1]);
+    if (body.length>2){
+    body[2][1][0][0]=body2.vInitial*Math.sin(theta[2]);
+    body[2][1][1][0]=body2.vInitial*Math.cos(theta[2]);
+    }
+    if (body.length>3){
+    body[3][1][0][0]=body3.vInitial*Math.sin(theta[3]);
+    body[3][1][1][0]=body3.vInitial*Math.cos(theta[3]);
+    }
+    for (int i = 4;i<body.length;i++) {
+      System.out.println("initial velocity");
+      distance = kb.nextDouble();
+      body[i][1][0][0]=distance*Math.sin(theta[i]);
+      body[i][1][1][0]=distance*Math.cos(theta[i]);
+    }
+
+
+
+
+
 
 
 
