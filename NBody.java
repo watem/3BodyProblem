@@ -34,7 +34,7 @@ public class NBody{
     int nPoints=bodies*3*2*imax+bodies*5;
     // System.out.println(nPoints);
     if (nPoints>maxJavaHeap) {
-      System.out.println("WARNING. Datapoints exceed maximum acceptable number of points within java (trying to use "+nPoints+" with a maximum of "+maxJavaHeap+" points)\nConsider either lowering accuracy or lowering the max time of simulation");
+      System.out.println("WARNING. Datapoints exceed maximum acceptable number of points within java (trying to use "+nPoints+" with a maximum of "+maxJavaHeap+" points)\nConsider either lowering accuracy, lowering the max time of simulation, or increasing the java heap size\nin the situation of increasing heap space, please change the value for maxJavaHeap");
       System.exit(0);
     }
 
