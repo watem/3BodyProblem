@@ -12,39 +12,27 @@
   public static final double dt = 0.1; //delta t in hours
   public static double tmax ; //number of hours to run
   public static double time = 0; //initial time
-  // public static final double tmax; //number of hours to run {inputs}
   public static final int imax =(int) (tmax/dt); //number of time steps
-  // public static final double imax; //number of time steps {inputs}
   public static final boolean graphing = true;
   public static final double au = 1.49597870700*Math.pow(10,8);//initial distance of earth from the sun in km
-  // public static final double radEarth=; //km
-  // public static final double radSun=; //km
-
   public static final double massEarth=5.972*Math.pow(10, 24); //kg
   public static final double massSun=1.989*Math.pow(10, 30);  //kg
   public static double massSat; //kg
   public static final double velocityEarth = 1.08*Math.pow(10, 5);// initial velocity of Earth
+  
   public static Scanner kb = new Scanner(System.in);
-
-
 
   public static void main(String[] args) {
 
 	
   System.out.print("Please enter the duration of the simulation: ");
-	  tmax = kb.nextDouble();
+  tmax = kb.nextDouble();
 	  
   System.out.print("Please enter the mass of the satellite: ");
-	  massSat = kb.nextDouble();
+  massSat = kb.nextDouble();
 	  
   double satX, satY, velInitialX, velInitialY;
 
-  // earthX[0][0]=1.495978*Math.pow(10,16);
-  // earthX[1][0]=0;
-  // earthY[1][0]=108000;
-  // earthY[0][0]=0;
-  // System.out.println("please enter the mass of the satellite: ");
-  // massSat = kb.nextDouble();
   System.out.print("Please enter the initial x position of the satellite: ");
   satX = kb.nextDouble();
   System.out.print("Please enter the initial y position of the satellite: ");
@@ -54,10 +42,6 @@
   System.out.print("Please enter the initial y velocity of the satellite: ");
   velInitialY = kb.nextDouble();
 
-  
-  
-
-	
 	
   double [][][] object = new double [3][3][2];
   
@@ -85,7 +69,7 @@
   object[1][2][0] = 0; 
   object[1][2][1] = 0; 
   
-  //Sat
+  //Satellite
   object[2][0][0] = satX; 
   object[2][0][1] = satY; 
   
@@ -150,79 +134,119 @@
 
 
 
-  public static double [] mult(double [] array) {
-	
-	for(int i =0; i<array.length;i++) {
-		
-	array[i] = array[i]*dt;	
-	}
-	
-	
-	return array;
-	
-	
-}
+/**
+ * This method takes a double array as an input and multiplies is by the derivative of time
+ * 
+ * @param double[] array 
+ * @return array
+ * @authors Matthew Williams,Yulia Kosharych
+ * @version 17-05-2018
+ */
+
+ public static double [] mult(double [] array) {
+ for(int i =0; i<array.length;i++) {
+ array[i] = array[i]*dt;	
+ }
+ return array;
+ }
 
 
-  public static double [] add(double [] array1, double [] array2) {
-	
-	
-	double [] add = new double [array1.length];
-	
-	for(int i = 0; i < array1.length; i++)
-	{
-	add[i] = array1[i] + array2[i];
-		
-		
-	}
-	
-	return add;
-			
-}
-		
-		
-	public static double [] differencePos(double[] pos1, double [] pos2){
-			
-	double [] result = new double[2];
-	for(int i =0; i<pos1.length;i++) {
-				
-	result[i] = pos1[i]-pos2[i];
-				
-				
-			}
-	return result;
-			
-		}
-		
-  public static double [] getR(double [] objPos1, double [] objPos2) {
-	 
-	double [] rVector = new double [2];
-	
-	rVector[0]= objPos2[0] - objPos1[0];
-	rVector[1]= objPos2[1] - objPos1[1];
-	
-	return rVector;
-	}
+ /**
+ * This method takes two double arrays as input and adds them in a new array
+ * 
+ * @param double[] array
+ * @return double add
+ * @authors Matthew Williams,Yulia Kosharych
+ * @version 17-05-2018
+ */
 
 
+ public static double [] add(double [] array1, double [] array2) {
+ double [] add = new double [array1.length];
+ for(int i = 0; i < array1.length; i++)
+ {
+ add[i] = array1[i] + array2[i];
+ }
+ return add;			
+}	
+		
+/**
+* This method takes two double arrays as input representing the position of Sun/Earth and 
+* Satellite and subtracts the position of Sun/Earth from that of Satellite
+* 
+* @param double[] pos1, double [] pos2
+* @return result
+* @authors Matthew Williams,Yulia Kosharych
+* @version 17-05-2018
+*/
+
+ public static double [] differencePos(double[] pos1, double [] pos2){
+ double [] result = new double[2];
+ for(int i =0; i<pos1.length;i++) {				
+ result[i] = pos1[i]-pos2[i];
+ }
+ return result;
+ }
+		
+  /**
+ * This method takes a double array as an input and multiplies is by the derivative of time
+ * 
+ * @param double[] array
+ * @return array
+ * @authors Matthew Williams,Yulia Kosharych
+ * @version 17-05-2018
+ */	
+ public static double [] getR(double [] objPos1, double [] objPos2) {
+ double [] rVector = new double [2];
+ rVector[0]= objPos2[0] - objPos1[0];
+ rVector[1]= objPos2[1] - objPos1[1];
+ return rVector;
+ }
+
+
+  /**
+  * This method takes a double array as input and calculates the square root(also called magnitude)
+  * of the sum of two array elements to the power of two
+  * 
+  * @param double[] rVector
+  * @return rMagnitude
+  * @authors Matthew Williams, Yulia Kosharych
+  * @version 17-05-2018
+  */
   public static double getMag(double [] rVector) {
-	
-	double rMagnitude;
-	rMagnitude = Math.sqrt(Math.pow(rVector[0],2) + Math.pow(rVector[1], 2));
-	return rMagnitude;
-}
+  double rMagnitude;
+  rMagnitude = Math.sqrt(Math.pow(rVector[0],2) + Math.pow(rVector[1], 2));
+  return rMagnitude;
+  }
 
-
-  public static double [] getUnit(double [] rVector, double rMagnitude ) {
-	
+/**
+ * This method calculates the unit vector which determines the dirrection of the acceleration vector
+ * 
+ * @param double [] rVector    this array contains the x and y components of the vector
+ * @param double rMagnitude    this is the magnitude of the vector
+ * @return array
+ * @authors Matthew Williams,Yulia Kosharych
+ * @version 17-05-2018
+ */	
+  public static double [] getUnit(double [] rVector, double rMagnitude ) {	
   double [] unit = new double[2];
-
   unit[0] = rVector[0]/rMagnitude;
   unit[1] = rVector[1]/rMagnitude;
-
   return unit;
   }
 
+  /**
+  * This method calculates the x and y components of the instantaneous acceleration vector of any object of mass m 
+  * under influence of another object 
+  * 
+  * @param double mPullObj      this is the mass of a object given
+  * @param double [] objPos1    this is position vector of the first object
+  * @param double [] objPos2    this is position vector of the second object
+  * @return accelVector
+  * @authors Matthew Williams,Yulia Kosharych
+  * @version 17-05-2018
+  */	
+	  
   public static double [] accelSunAnyObj( double mPullObj,double [] objPos1, double [] objPos2) {
 
   double rMagnitude;	
@@ -242,46 +266,58 @@
   return accelVector;
 }
 
+
+ /**
+  * This method compares instantaneous accelerations of an object and returns the greatest acceleration reached
+  * 
+  * @param double [] accelInitial   
+  * @param double [] accelFinal   
+  * @return accelFinal
+  * @authors Matthew Williams,Yulia Kosharych
+  * @version 17-05-2018
+  */	
+
   public static double [] compareAccel(double [] accelInitial, double [] accelFinal) {
-	
-	double accelMagIn = getMag(accelInitial);
-	double accelMagFin = getMag(accelFinal);
-	
-	
-	
-	if (accelMagIn < accelMagFin) {
-		
-	return accelFinal;
-		
-	}else {
-		
-	return accelInitial;
-	}
-	
-	
-}
+  double accelMagIn = getMag(accelInitial);
+  double accelMagFin = getMag(accelFinal);
+  if (accelMagIn < accelMagFin) {
+  return accelFinal;
+  }else {
+  return accelInitial;
+  }	
+  }
+
+ /**
+  * This method updates instantaneous velocity of an object
+  * 
+  * @param double [] velInitial   this is the initial velocity vector of an object
+  * @param double [] accel        this is the acceleration of the object 
+  * @return velInitial            this is the final velocity vector of an object for each dt
+  * @authors Matthew Williams,Yulia Kosharych
+  * @version 17-05-2018
+  */
 
   public static double [] updateVel(double [] velInitial, double [] accel) {
-	
-	
-	velInitial[0] = accel[0] *dt + velInitial[0];
-	velInitial[1] = accel[1] *dt + velInitial[1];
-	
-	
-	return velInitial;
-}
+  velInitial[0] = accel[0] *dt + velInitial[0];
+  velInitial[1] = accel[1] *dt + velInitial[1];
+  return velInitial;
+  }
 
-
+ /**
+  * This method updates instantaneous position of an object
+  * 
+  * @param double [] posInitial   this is the initial position of an object
+  * @param double [] vel          this is the velocity of an object
+  * @return posInitial            this is the final position vector of an object for each dt
+  * @authors Matthew Williams,Yulia Kosharych
+  * @version 17-05-2018
+  */
 
   public static double [] updatePos(double [] posInitial, double [] vel) {
-	
-	
-	posInitial[0] = vel[0] * dt + posInitial[0];
-	posInitial[1] = vel[1] * dt + posInitial[1];
-	
-	return posInitial;
-		
-}
+  posInitial[0] = vel[0] * dt + posInitial[0];
+  posInitial[1] = vel[1] * dt + posInitial[1];
+  return posInitial;		
+  }
 
   public static double[] comparePosition(double[] posInitial, double[] posFinal) {
 	
