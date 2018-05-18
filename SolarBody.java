@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class SolarBody{
   // mass*     = mass of the body (kg)
   // v*        = initial velocity of body (km/h)
-  // solDis*   = distance from sun (km)
+  // solDis*   = distance from Sol (km)
   // rad*      = radius of body (km)
 
   // universal constants
@@ -19,39 +19,54 @@ public class SolarBody{
 
 
   // values for common objects
-  public static String nameSun = "Sun";
-  public static double massSun = 1.989*Math.pow(10, 30);
-  public static double solDisSun = 0;
-  public static double vSun = 0;
-  public static double radSun = 695508;
+  public static String nameSol = "Sol";
+  public static double massSol = 1.989*Math.pow(10, 30);
+  public static double solDisSol = 0;
+  public static double vSol = 0;
+  public static double radSol = 695508;
 
   public static String nameEarth = "Earth";
   public static double massEarth = 5.972*Math.pow(10, 24);
   public static double solDisEarth = au;
-  public static double vEarth = Math.sqrt(G*massSun/solDisEarth);
+  public static double vEarth = BodyMaths.circleVelocityG(massSol,solDisEarth);
   public static double radEarth = 6371;
+
+  public static String nameLuna = "Luna";
+  public static double massLuna = 7.342*Math.pow(10, 22);
+  public static double earthDisLuna = 384402;
+  public static double solDisLuna = solDisEarth+earthDisLuna;
+  public static double vLuna = vEarth+BodyMaths.circleVelocityG(massEarth,earthDisLuna);
+  public static double radLuna = 1737;
 
   public static String nameJupiter = "Jupiter";
   public static double massJupiter = 1.898*Math.pow(10, 27);
   public static double solDisJupiter = 5.2*au;
-  public static double vJupiter = Math.sqrt(G*massSun/solDisJupiter);
+  public static double vJupiter = BodyMaths.circleVelocityG(massSol,solDisJupiter);
   public static double radJupiter = 69911;
+
+  public static String nameCallisto = "Callisto";
+  public static double massCallisto = 1.076*Math.pow(10, 23);
+  public static double jupDisCallisto = 1880000;
+  public static double solDisCallisto = solDisJupiter+jupDisCallisto;
+  public static double vCallisto = vJupiter+BodyMaths.circleVelocityG(massSol, solDisJupiter);
+  public static double radCallisto = 2410.3;
 
 
   public String name;       // name of the body
-  public double mass;       // mass of the body (kg)
-  public double solDis;     // distance from sun (km)
-  public double vInitial;   // initial velocity of body (km/h)
-  public double rad;        // radius of body (km)
-  public double theta;      // starting angle (rad)
-
+  public double mass;       // mass of the body (kg)            strictly positive
+  public double solDis;     // distance from Sol (km)           strictly positive
+  public double vInitial;   // initial velocity of body (km/h)  positive/negative
+  public double rad;        // radius of body (km)              strictly positive
+  public double theta;      // starting angle (rad)             positive/negative
+  //replace velocity location or theta location with string location in constructor be able to select one of them. keep at beginning if removing both
+  // all other variables allow for adaption when set to a negative value
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   /**
   * This method constructs a Solarbody object
   * @param name String         name of the body
   * @param mass double        mass of the body (kg)
-  * @param solDis double      distance from sun (km)
+  * @param solDis double      distance from Sol (km)
   * @param vInitial double    initial velocity of body (km/h)
   * @param rad double         radius of body (km)
   * @param theta double       starting angle (rad)
@@ -67,7 +82,7 @@ public class SolarBody{
   }//specific body constructor
 
   /**
-  * This method constructs a Solarbody with only a name and input values on all other variables except theta
+  * This method constructs a Solarbody with only a name and input values on all other variables
   * @param name String         name of the body
   * @version 2018-05-16
   **/
@@ -75,45 +90,85 @@ public class SolarBody{
     this.name=name;
     this.mass=-1;
     this.solDis=-1;
-    this.vInitial=-1;
+    setVelocity();
     this.rad=-1;
+    setTheta();
   }//input constructor
+  public SolarBody(double mass, double solDis, double vInitial, double rad, String name){
+    this.name=name;
+    this.mass=mass;
+    this.solDis=solDis;
+    this.vInitial=vInitial;
+    this.rad=rad;
+    setTheta();
+  }
+  public SolarBody(double mass, double solDis, String name, double rad, double theta){
+    this.name=name;
+    this.mass=mass;
+    this.solDis=solDis;
+    setVelocity();
+    this.rad=rad;
+    this.theta=theta;
+  }//select a velocity constructor
+  public SolarBody(String name, double mass, double solDis, double rad){
+    this.name=name;
+    this.mass=mass;
+    this.solDis=solDis;
+    setVelocity();
+    this.rad=rad;
+    setTheta();
+  }//select theta and velocity constructor
+
 
 
 // premade starting objects that can be chosen
-  public static SolarBody Sun = new SolarBody(nameSun, massSun, solDisSun, vSun, radSun, 0);
+  public static SolarBody Sol = new SolarBody(nameSol, massSol, solDisSol, vSol, radSol, 0);
   public static SolarBody Jupiter = new SolarBody(nameJupiter, massJupiter, solDisJupiter, vJupiter, radJupiter, 0);
+  public static SolarBody Callisto = new SolarBody(nameCallisto, massCallisto, solDisCallisto, vCallisto, radCallisto, 0);
   public static SolarBody Earth = new SolarBody(nameEarth, massEarth, solDisEarth, vEarth, radEarth, 0);
-  public static SolarBody ES_L4 = new SolarBody("ES_L4", -1, solDisEarth, vEarth, 0, Math.PI/3);
-  public static SolarBody PlanetX = new SolarBody("PlanetX", massEarth, solDisSun-BodyMaths.L3((solDisEarth-solDisSun),massSun, massEarth), vEarth, radEarth, Math.PI);
-  public static SolarBody Greeks = new SolarBody("Greeks", -1, solDisJupiter, vJupiter, 0, Math.PI/3);
-  public static SolarBody Trojans = new SolarBody("Trojans", -1, solDisJupiter, vJupiter, 0, -Math.PI/3);
-  public static SolarBody Satellite()  {return chooseTheta("satellite", 100, -1, -1, 0);}
+  public static SolarBody Luna = new SolarBody(nameLuna, massLuna, solDisLuna, vLuna, radLuna, 0);
+  public static SolarBody SE_L4 = new SolarBody("SE_L4", -1, solDisEarth, vEarth, 0, Math.PI/3);
+  // public static SolarBody PlanetX = new SolarBody("PlanetX", massEarth, solDisSol-BodyMaths.L3((solDisEarth-solDisSol),massSol, massEarth), vEarth, radEarth, Math.PI);
+  public static SolarBody Greeks = new SolarBody("Greeks", -1, solDisJupiter, vJupiter, 0, Math.PI/6);
+  public static SolarBody Trojans = new SolarBody("Trojans", -1, solDisJupiter, vJupiter, 0, -Math.PI/6);
+  public static SolarBody Horseshoe = new SolarBody("Horseshoe orbit", 10, SolarBody.solDisJupiter-BodyMaths.L1(SolarBody.solDisJupiter, SolarBody.massSol, SolarBody.massJupiter), BodyMaths.circleVelocityG(SolarBody.massSol,(SolarBody.solDisJupiter-BodyMaths.L1(SolarBody.solDisJupiter, SolarBody.massSol, SolarBody.massJupiter))), 0, -Math.PI/9);
+
+
 
 
   /**
   * This method creates an object and asks for user input relating to the theta value
   * @param name String            name of the body
   * @param mass double            mass of the body (kg)
-  * @param solDis double          distance from sun (km)
+  * @param solDis double          distance from Sol (km)
   * @param vInitial double        initial velocity of body (km/h)
   * @param rad double             radius of body (km)
   * @return thetaless SolarBody   full Solarbody object
   * @version 2018-05-16
   **/
-  public static SolarBody chooseTheta(String name, double mass, double solDis, double vInitial, double rad){
-    Scanner kb = new Scanner(System.in);
-    System.out.println("desired theta for "+name+" in pi radians");
-    double theta = kb.nextDouble()*Math.PI;
-    SolarBody thetaless = new SolarBody(name, mass, solDis, vInitial, rad, theta);
-    return thetaless;
+
+
+
+
+  public void setPath(){
+    this.mass=0;
+    this.name=this.name+"'s path";
   }
-  public static SolarBody named(String name){
-    SolarBody named = new SolarBody(name);
-    return named;
-  }//constructed named body
-  public static SolarBody other(String name, double mass, double solDis, double vInitial, double rad, double theta){
-    SolarBody other = new SolarBody(name, mass, solDis, vInitial, rad, theta);
-    return other;
-  }//other constructor
+  public void setTheta(){
+    Scanner kb = new Scanner(System.in);
+    System.out.println("desired theta for "+this.name+" in pi radians");
+    this.theta=kb.nextDouble()*Math.PI;
+  }
+  public void setVelocity(){
+    Scanner kb = new Scanner(System.in);
+    System.out.println("desired initial velocity for "+this.name+" in km/h");
+    double vInit = kb.nextDouble();
+    System.out.print("times 10^");
+    double power = Math.pow(10, kb.nextDouble());
+    this.vInitial=vInit*power;
+    System.out.println("initial velcity = "+this.vInitial);
+  }
+
+
+
 }

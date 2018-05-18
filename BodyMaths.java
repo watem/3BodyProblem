@@ -115,6 +115,57 @@ public class BodyMaths {
     return r;
   }//L3()
 
+  public static double circleVelocityG(double massBig, double dis){
+    return Math.sqrt(G*massBig/dis);
+  }//circleVelocityG()
 
+  public static double angularVelocity(double massBig, double dis){
+    double omega = circleVelocityG(massBig, dis)/dis;
+    return omega;
+  }
+  public static double orbitalPeriod(double massBig, double dis){
+    double time = 2*Math.PI/angularVelocity(massBig, dis);
+    return time;
+  }
+
+  public static void inertialReference(double body[][][][], int inertiaNum){
+    int bodies = body.length;
+    int imax = body[0][0][0].length;
+    double bodyTheta[][] = new double[bodies][imax];
+    double radial[][] = new double[bodies][imax];
+    for (int i=0;i<bodyTheta[0].length;i++) {
+      if (body[inertiaNum][0][0][i]==0) {
+        bodyTheta[inertiaNum][i]=Math.PI/2;
+      }
+      else {
+        bodyTheta[inertiaNum][i]=Math.atan(body[inertiaNum][0][1][i]/body[inertiaNum][0][0][i]);
+      }
+      if (body[inertiaNum][0][0][i]<0) {
+        bodyTheta[inertiaNum][i]+=Math.PI;
+      }
+      radial[inertiaNum][i]=BodyMaths.norm(body[inertiaNum][0][1][i],body[inertiaNum][0][0][i]);
+      body[inertiaNum][0][0][i]=radial[inertiaNum][i];
+      body[inertiaNum][0][1][i]=0;
+    }
+    for (int bodynum=1;bodynum<bodyTheta.length;bodynum++) {
+      if (bodynum!=inertiaNum) {
+        for (int i=0;i<bodyTheta[0].length;i++) {
+          if (body[bodynum][0][0][i]==0) {
+            bodyTheta[bodynum][i]=Math.PI/2;
+          }
+          else {
+            bodyTheta[bodynum][i]=Math.atan(body[bodynum][0][1][i]/body[bodynum][0][0][i]);
+          }
+          if (body[bodynum][0][0][i]<0) {
+            bodyTheta[bodynum][i]+=Math.PI;
+          }
+          bodyTheta[bodynum][i]-=bodyTheta[inertiaNum][i];
+          radial[bodynum][i]=BodyMaths.norm(body[bodynum][0][1][i],body[bodynum][0][0][i]);
+          body[bodynum][0][0][i]=radial[bodynum][i]*Math.cos(bodyTheta[bodynum][i]);
+          body[bodynum][0][1][i]=radial[bodynum][i]*Math.sin(bodyTheta[bodynum][i]);
+        }
+      }
+    }
+  }
 
 }//class
