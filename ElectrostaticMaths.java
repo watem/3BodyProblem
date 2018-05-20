@@ -1,5 +1,6 @@
 /**
 * This logic class contains all of the equations for three body problems involving electrostatics.
+* has BodyMaths.java as a dependency
 * @author Matthew Williams, Yulia Kosharych
 * @version 2018-05-16
 **/
