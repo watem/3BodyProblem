@@ -22,7 +22,7 @@ public class BodyMaths {
   **/
   public static double electrostaticAccel(double obj[][], double body[][], double qObj, double qBody, double massObj, int i, int axis){
     double acceleration;
-    acceleration = Ke*qObj*qBody*(obj[axis][i]-body[axis][i])/Math.pow(radius(obj, body, i), 3)/massObj;
+    acceleration = Ke*qObj*qBody*(obj[axis][i]-body[axis][i])/Math.pow(Bodymaths.radius(obj, body, i), 3)/massObj;
     return acceleration;
   }//electrostaticAccel()
 }
