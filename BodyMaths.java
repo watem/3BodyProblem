@@ -1,5 +1,5 @@
 /**
-* This logic class contains all of the equations for three body problems involving gravity.
+* This logic class contains all of the equations for three body problems involving gravity or electrostatics.
 * This class also contains the formulae for gravitational Lagrange points.
 * @author Matthew Williams, Yulia Kosharych
 * @version 2018-05-16
@@ -9,6 +9,7 @@ public class BodyMaths {
 
   // import constants
   public static final double G = SolarBody.G;
+
 
   /**
   * This method calculates the acceleration that one body causes on another due to gravity
@@ -25,6 +26,8 @@ public class BodyMaths {
     acceleration = -G*massBody*(obj[axis][i]-body[axis][i])/Math.pow(radius(obj, body, i), 3);
     return acceleration;
   }//dualBodyAccel()
+
+
 
   /**
   * This method calculates the magnitude of a two dimensional vector
@@ -61,11 +64,11 @@ public class BodyMaths {
   **/
   public static void updateBody(double obj[][][], double dt, int i){
     // velocity = vI + a*dt
-    obj[1][0][i]=obj[1][0][i-1]+obj[2][0][i]*dt;
-    obj[1][1][i]=obj[1][1][i-1]+obj[2][1][i]*dt;
+    obj[1][0][0]+=obj[2][0][i]*dt;
+    obj[1][1][0]+=obj[2][1][i]*dt;
     // position = xI + v*dt
-    obj[0][0][i]=obj[0][0][i-1]+obj[1][0][i]*dt;
-    obj[0][1][i]=obj[0][1][i-1]+obj[1][1][i]*dt;
+    obj[0][0][i]=obj[0][0][i-1]+obj[1][0][0]*dt;
+    obj[0][1][i]=obj[0][1][i-1]+obj[1][1][0]*dt;
   }//updateBody()
 
 
@@ -96,19 +99,51 @@ public class BodyMaths {
     return r;
   }//L3()
 
+
+
+  /**
+  * This method calculates the required orbital velocity for a circular orbit
+  * @param massBig double       this is the mass of the driving body
+  * @param dis double           this is the starting distance between the two bodies
+  * @return velocity double     this is velocity required for a circular orbit
+  * @version 2018-05-16
+  **/
   public static double circleVelocityG(double massBig, double dis){
-    return Math.sqrt(G*massBig/dis);
+    double velocity = Math.sqrt(G*massBig/dis);
+    return velocity;
   }//circleVelocityG()
 
+  /**
+  * This method calculates the the angularVelocity of a body in circular gravitational motion
+  * @param massBig double       this is the mass of the driving body
+  * @param dis double           this is the distance between the two bodies
+  * @return omega double        this is the angular velocity of the body
+  * @version 2018-05-16
+  **/
   public static double angularVelocity(double massBig, double dis){
     double omega = circleVelocityG(massBig, dis)/dis;
     return omega;
-  }
+  }//angularVelocity()
+
+  /**
+  * This method calculates the orbital period of two bodies in circular gravitational motion
+  * @param massBig double       this is the mass of the driving body
+  * @param dis double           this is the distance between the two bodies
+  * @return time double         this is the orbital period in hours
+  * @version 2018-05-16
+  **/
   public static double orbitalPeriod(double massBig, double dis){
     double time = 2*Math.PI/angularVelocity(massBig, dis);
     return time;
-  }
+  }//orbitalPeriod()
 
+
+  /**
+  * This method converts the positions from cartesian to polar coordinates in order to make the plot relative to one body
+  * @param body[][][][] double    these are the position, velocity, acceleration vectors for a body
+  * @param inertiaNum int         this is the body number to use for the reference
+  * @version 2018-05-18
+  **/
   public static void inertialReference(double body[][][][], int inertiaNum){
     int bodies = body.length;
     int imax = body[0][0][0].length;
@@ -147,6 +182,6 @@ public class BodyMaths {
         }
       }
     }
-  }
+  }//inertialReference()
 
 }//class

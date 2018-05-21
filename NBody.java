@@ -12,15 +12,16 @@ import java.util.Scanner;
 public class NBody{
   //presets
   public static SolarBody body0 = SolarBody.Sol;
-  // public static SolarBody body1 = SolarBody.Earth;
-  public static SolarBody body1 = SolarBody.Jupiter;
+  public static SolarBody body1 = SolarBody.Earth;
+  // public static SolarBody body1 = SolarBody.Jupiter;
   // public static SolarBody body2 = new SolarBody("satellite", 100, SolarBody.au/7, SolarBody.vJupiter, 0.001, 3*Math.PI/2);
-  // public static SolarBody body2 = new SolarBody("satellite");
+  public static SolarBody body2 = SolarBody.PlanetX;
   // public static SolarBody body2 = SolarBody.Horseshoe;
   // public static SolarBody body2 = SolarBody.Luna;
 
-  public static double dis = SolarBody.solDisJupiter+Math.pow(10, 5);
-  public static SolarBody body2 = new SolarBody("Tadpole orbit", 10, dis, BodyMaths.circleVelocityG(body0.mass, dis), 0, -Math.PI/6);
+  // public static double dis = SolarBody.solDisJupiter+Math.pow(10, 5);
+  // public static SolarBody body2 = new SolarBody("Tadpole orbit", 10, dis, BodyMaths.circleVelocityG(body0.mass, dis), 0, -Math.PI/6);
+  // public static SolarBody body2 = SolarBody.IrregularTadpole;
 
   // public static SolarBody body3 = new SolarBody("probe", -1, -1, SolarBody.vEarth, 0, 0);
   public static SolarBody body3 = SolarBody.Jupiter;
@@ -36,7 +37,7 @@ public class NBody{
 
   public static final double dt = 1.;                            //delta t in hours
   // public static final double tmax = 8765.82*5*3.54;                  //number of hours to run
-  public static final double tmax =4*BodyMaths.orbitalPeriod(body0.mass, body1.solDis); //number of "years" to run (in hours)
+  public static final double tmax =0.1*BodyMaths.orbitalPeriod(body0.mass, body1.solDis); //number of "years" to run (in hours)
   public static final int imax =(int) (tmax/dt);                   //number of time steps
   // number of bodies to use
   public static final int bodies = 3;
@@ -50,7 +51,7 @@ public class NBody{
   public static final double timeEnd = 7*BodyMaths.orbitalPeriod(body0.mass, body1.solDis);;;
   public static final boolean partial = false;
 
-  
+
   public static final boolean graphing = false;  //plots locations
   public static final boolean print = false;    //prints all steps in calculations. not recommended.
   public static final boolean verbose = true;   //provides details as to what the program is doing
@@ -69,6 +70,15 @@ public class NBody{
       System.out.println("WARNING. Datapoints exceed maximum acceptable number of points within java (trying to use "+nPoints+" with a maximum of "+maxJavaHeap+" points)\nConsider either lowering accuracy or lowering the max time of simulation");
       // System.exit(0);
     }
+    // body2.setName("Tadpole");
+    // body2.setDisAU();
+    // body2.addDis();
+    // body2.addVel();
+
+
+
+
+
     if (setPath0) {
       body0.setPath();
     }
@@ -91,6 +101,10 @@ public class NBody{
     double theta[] = new double[bodies];
     double distance;
 
+
+    for (int i =0;i<body.length;i++) {
+      body[i][1]=new double[2][1];
+    }
     // System.out.println("multiple of vEarth");
     // double n = kb.nextDouble();
     // double l = 1;
@@ -283,22 +297,23 @@ public class NBody{
       if (verbose) {
         System.out.println("starting graph");
       }
-      NBodyGraph.graphNBody(bodyName, body);
+      NBodyGraph.graphNBody(bodyName, body, "cartesian plot");
       if (verbose) {
         System.out.println("graph input complete");
       }
     }
+
     else if (inertialPlot) {
-      //TODO: return everything to an inertial frame of reference
       if (verbose) {
         System.out.println("calculating with respect to an inertial frame of reference");
       }
+
       BodyMaths.inertialReference(body, inertiaNum);
 
       if (verbose) {
         System.out.println("inertial calculations complete\nstarting inertial graph");
       }
-      NBodyGraph.graphNBody(bodyName, body);
+      NBodyGraph.graphNBody(bodyName, body, "inertial Reference plot");
       if (verbose) {
         System.out.println("inertial graph input complete");
       }

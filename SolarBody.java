@@ -128,37 +128,37 @@ public class SolarBody{
   public static SolarBody Earth = new SolarBody(nameEarth, massEarth, solDisEarth, vEarth, radEarth, 0);
   public static SolarBody Luna = new SolarBody(nameLuna, massLuna, solDisLuna, vLuna, radLuna, 0);
   public static SolarBody SE_L4 = new SolarBody("SE_L4", -1, solDisEarth, vEarth, 0, Math.PI/3);
-  // public static SolarBody PlanetX = new SolarBody("PlanetX", massEarth, solDisSol-BodyMaths.L3((solDisEarth-solDisSol),massSol, massEarth), vEarth, radEarth, Math.PI);
-  public static SolarBody Greeks = new SolarBody("Greeks", -1, solDisJupiter, vJupiter, 0, Math.PI/6);
-  public static SolarBody Trojans = new SolarBody("Trojans", -1, solDisJupiter, vJupiter, 0, -Math.PI/6);
+  public static SolarBody PlanetX = new SolarBody("PlanetX", massEarth, solDisEarth, vEarth, radEarth, Math.PI);
+  public static SolarBody Greeks = new SolarBody("Greeks", -1, solDisJupiter, vJupiter, 0, Math.PI/3);
+  public static SolarBody Trojans = new SolarBody("Trojans", 1000, solDisJupiter, vJupiter, 0, -Math.PI/3);
   public static SolarBody Horseshoe = new SolarBody("Horseshoe orbit", 10, SolarBody.solDisJupiter-BodyMaths.L1(SolarBody.solDisJupiter, SolarBody.massSol, SolarBody.massJupiter), BodyMaths.circleVelocityG(SolarBody.massSol,(SolarBody.solDisJupiter-BodyMaths.L1(SolarBody.solDisJupiter, SolarBody.massSol, SolarBody.massJupiter))), 0, -Math.PI/9);
-
-
+  public static SolarBody IrregularTadpole = new SolarBody("Irregular Tadpole", 100, solDisJupiter+Math.pow(10, 7), vJupiter, 0, -Math.PI/3);
+  public static SolarBody Tadpole = new SolarBody("Tadpole", 100, solDisJupiter+Math.pow(10, 7), vJupiter-600, 0, -Math.PI/3);
 
 
   /**
-  * This method creates an object and asks for user input relating to the theta value
-  * @param name String            name of the body
-  * @param mass double            mass of the body (kg)
-  * @param solDis double          distance from Sol (km)
-  * @param vInitial double        initial velocity of body (km/h)
-  * @param rad double             radius of body (km)
-  * @return thetaless SolarBody   full Solarbody object
-  * @version 2018-05-16
+  * This method sets the mass to 0 to show the path the body would take without influencing any other bodies as well as changing the name to reflect the change
+  * @version 2018-05-18
   **/
-
-
-
-
   public void setPath(){
     this.mass=0;
     this.name=this.name+"'s path";
-  }
+  }//setPath()
+
+  /**
+  * This method sets the theta value for an object
+  * @version 2018-05-18
+  **/
   public void setTheta(){
     Scanner kb = new Scanner(System.in);
     System.out.println("desired theta for "+this.name+" in pi radians");
     this.theta=kb.nextDouble()*Math.PI;
-  }
+  }//setTheta()
+
+  /**
+  * This method sets the velocity to a desired power of 10 from user input
+  * @version 2018-05-18
+  **/
   public void setVelocity(){
     Scanner kb = new Scanner(System.in);
     System.out.println("desired initial velocity for "+this.name+" in km/h");
@@ -167,8 +167,70 @@ public class SolarBody{
     double power = Math.pow(10, kb.nextDouble());
     this.vInitial=vInit*power;
     System.out.println("initial velcity = "+this.vInitial);
-  }
+  }//setVelocity()
 
+  /**
+  * This method sets the starting distance to a desired power of 10 from user input
+  * @version 2018-05-18
+  **/
+  public void setDis(){
+    Scanner kb = new Scanner(System.in);
+    System.out.println("desired initial distance for "+this.name+" in km");
+    double dis = kb.nextDouble();
+    System.out.print("times 10^");
+    double power = Math.pow(10, kb.nextDouble());
+    this.solDis=dis*power;
+    System.out.println("initial distance = "+this.solDis);
+  }//setDis()
+  /**
+  * This method sets the starting number of AUs from user input
+  * @version 2018-05-18
+  **/
+  public void setDisAU(){
+    Scanner kb = new Scanner(System.in);
+    System.out.println("desired initial distance for "+this.name+" in AUs");
+    double dis = kb.nextDouble();
+    this.solDis=dis*au;
+    System.out.println("initial distance = "+this.solDis);
+  }//setDisAU()
+  /**
+  * This method sets the name from user input
+  * @version 2018-05-18
+  **/
+  public void setName(String name){
+    // Scanner kb = new Scanner(System.in);
+    // System.out.println("name for the body");
+    // String name = kb.nextString();
+    this.name=name;
+    System.out.println("new name:"+this.name);
+  }//setnane()
 
+  /**
+  * This method adds to the starting distance to a desired power of 10 from user input
+  * @version 2018-05-18
+  **/
+  public void addDis(){
+    Scanner kb = new Scanner(System.in);
+    System.out.println("desired additional distance for "+this.name+" in km");
+    double dis = kb.nextDouble();
+    System.out.print("times 10^");
+    double power = Math.pow(10, kb.nextDouble());
+    this.solDis+=dis*power;
+    System.out.println("initial distance = "+this.solDis);
+  }//setDis()
 
-}
+  /**
+  * This method adds to the starting velocity to a desired power of 10 from user input
+  * @version 2018-05-18
+  **/
+  public void addVel(){
+    Scanner kb = new Scanner(System.in);
+    System.out.println("desired additional velcity for "+this.name+" in km/h");
+    double vel = kb.nextDouble();
+    System.out.print("times 10^");
+    double power = Math.pow(10, kb.nextDouble());
+    this.vInitial+=vel*power;
+    System.out.println("initial velocity = "+this.solDis);
+  }//setDis()
+
+}//class
