@@ -4,7 +4,7 @@
 * @author Matthew Williams, Yulia Kosharych
 * @version 2018-05-16
 **/
-public class BodyMaths {
+public class ElectrostaticMaths {
 
   // import constants
   public static final double Ke = Electrostatics.Ke;
@@ -23,8 +23,7 @@ public class BodyMaths {
   **/
   public static double electrostaticAccel(double obj[][], double body[][], double qObj, double qBody, double massObj, int i, int axis){
     double acceleration;
-    acceleration = Ke*qObj*qBody*(obj[axis][i]-body[axis][i])/Math.pow(Bodymaths.radius(obj, body, i), 3)/massObj;
+    acceleration = Ke*qObj*qBody*(obj[axis][i]-body[axis][i])/Math.pow(BodyMaths.radius(obj, body, i), 3)/massObj;
     return acceleration;
   }//electrostaticAccel()
 }
-   

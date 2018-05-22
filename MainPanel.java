@@ -41,6 +41,9 @@ public class MainPanel extends JPanel{
 	public static final double au = SolarBody.au;//initial distance of earth from the sun in km
 
 
+	// public static final double massEarth=SolarBody.massEarth; //kg
+	// public static final double velocityEarth = SolarBody.vEarth;// initial velocity of Earth
+
 	public static final double massEarth=SolarBody.massEarth; //kg
 	public static final double velocityEarth = SolarBody.vEarth;// initial velocity of Earth
 
@@ -48,9 +51,9 @@ public class MainPanel extends JPanel{
 	public static final double velocityJupiter = SolarBody.vJupiter;//velocity jupiter
 
 
-	public static final double massL5 = SolarBody.SE_L5; //kg
+	public static final double massL5 = SolarBody.SE_L5.mass; //kg
 
-	public static final double massSun=SolarBody.massSun;  //kg
+	public static final double massSun=SolarBody.massSol;  //kg
 	public static double massSat; //kg
 
 	public static Scanner kb = new Scanner(System.in);
@@ -69,6 +72,7 @@ public class MainPanel extends JPanel{
 	public void initSunEarthLuna()
 	{
 		 scaling = 350;
+
 			//Sat Conditions
 		  massSat = SolarBody.massLuna;
 		  satX = SolarBody.solDisLuna;
@@ -84,17 +88,36 @@ public class MainPanel extends JPanel{
 			velInitialPlanetY = velocityEarth;
 
 	}
+	public void initSunJupiterCallisto()
+	{
+		 scaling = 75;
+			//Sat Conditions
+			massSat = SolarBody.massCallisto;
+			satX = SolarBody.solDisCallisto+9*SolarBody.jupDisCallisto;
+			satY = 0;
+			velInitialX = 0;
+			velInitialY = SolarBody.vJupiter+BodyMaths.circleVelocityG(massEarth, 10*SolarBody.jupDisCallisto);
+
+				//Jupiter Condition
+			massPlanet = massJupiter;
+			planetX = SolarBody.solDisJupiter;
+			planetY = 0;
+			velInitialPlanetX = 0;
+			velInitialPlanetY = velocityJupiter;
+
+	}
 
 
 	public void initSunEarthL5()
 	{
 		 scaling = 350;
 			//Sat Conditions
+			double theta = -Math.PI/3;
 		  massSat = massL5;
-		  satX = au*Math.cos(-Math.PI/3);
-		  satY = au*Math.sin(-Math.PI/3);
-		  velInitialX = -velocityEarth*Math.sin(theta[0]);
-		  velInitialY = velocityEarth*Math.cos(theta[0]);
+		  satX = au*Math.cos(theta);
+		  satY = au*Math.sin(theta);
+		  velInitialX = -velocityEarth*Math.sin(theta);
+		  velInitialY = velocityEarth*Math.cos(theta);
 
 		  	//Planet Condition
 		  massPlanet = massEarth;
@@ -128,6 +151,26 @@ public class MainPanel extends JPanel{
 		  velInitialPlanetX = 0;
 		  velInitialPlanetY = velocityJupiter;
 
+
+	}
+
+	public void initHorseshoe()
+	{
+		 scaling = 75;
+			//Sat Conditions
+			double theta = SolarBody.Horseshoe.theta;
+		  massSat = SolarBody.Horseshoe.mass;
+		  satX = SolarBody.Horseshoe.solDis*Math.cos(theta);
+		  satY = SolarBody.Horseshoe.solDis*Math.sin(theta);
+		  velInitialX = -SolarBody.Horseshoe.vInitial*Math.sin(theta);
+		  velInitialY = SolarBody.Horseshoe.vInitial*Math.cos(theta);
+
+		  	//Planet Condition
+		  massPlanet = massJupiter;
+		  planetX = SolarBody.solDisJupiter;
+		  planetY = 0;
+		  velInitialPlanetX = 0;
+		  velInitialPlanetY =velocityJupiter;
 
 	}
 
@@ -182,7 +225,9 @@ public class MainPanel extends JPanel{
 
 		if (sim == 3) initSunJupiterProbe();
 
+		if (sim == 4) initSunJupiterCallisto();
 
+		if (sim == 5) initHorseshoe();
 
 		Algorithm();
 
